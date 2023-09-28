@@ -6,7 +6,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     install_requires=['requests-html'],
-    author='HaRaMC0de',
+    author='purplevoid',
     author_email='suckmynuts@yarak.com',
     description='I dont want to pay for their shitty api',
     long_description=open('README.md').read(),
