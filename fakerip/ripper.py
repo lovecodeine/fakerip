@@ -80,7 +80,7 @@ class Ripstance:
             data = tr.find('th')
             value = tr.find('span')
             data_left = data[0].text.lower()
-            data_right = data[1].text.lower() if len(value) > 1 else None
+            data_right = data[1].text.lower() if len(data) > 1 else None
             value_left = value[0].text
             value_right = value[1].text if len(value) > 1 else None
 
@@ -90,7 +90,8 @@ class Ripstance:
             elif data_left == 'address':
                 self.address = value_left
             elif data_left == 'city':
-                self.city = value_left
+                # TODO proper fix for this
+                self.city = value_left.capitalize()
             elif data_left == 'gender':
                 self.gender = value_left
             elif data_left == 'passport':
@@ -147,6 +148,7 @@ class Ripstance:
             elif data_right == 'passport expired':
                 self.passport_expired = value_right
             elif data_right == 'e-mail':
+                # TODO fix [email protected]
                 self.email = value_right
             elif data_right == 'ethnicity':
                 self.ethnicity = value_right
@@ -175,6 +177,7 @@ class Ripstance:
             elif data_right == 'job title':
                 self.job_title = value_right
             elif data_right == 'company email':
+                # TODO fix [email protected]
                 self.company_email = value_right
             elif data_right == 'license plate':
                 self.license_plate = value_right
