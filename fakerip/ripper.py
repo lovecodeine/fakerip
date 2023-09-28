@@ -69,6 +69,7 @@ class Ripstance:
         self.dob_day = None
         self.dob_month = None
         self.dob_year = None
+        self.email = None
 
     def get_info(self):
         session = HTMLSession()
