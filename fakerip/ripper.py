@@ -11,8 +11,6 @@ class Ripstance:
         # Personal Details
         self.country = None
         self.full_name = None
-        self.forename = None
-        self.surname = None
         self.address = None
         self.city = None
         self.postcode = None
@@ -21,7 +19,6 @@ class Ripstance:
         self.passport = None
         self.passport_expired = None
         self.phone = None
-        self.email = None
         self.mothers_maiden_name = None
         self.ethnicity = None
         self.age = None
@@ -57,7 +54,6 @@ class Ripstance:
         self.company_name = None
         self.company_address = None
         self.company_phone = None
-        self.company_email = None
         self.job_title = None
         self.salary = None
 
@@ -66,6 +62,13 @@ class Ripstance:
         self.license_plate = None
         self.vin = None
         self.vehicle_color = None
+
+        # Custom
+        self.forename = None
+        self.surname = None
+        self.dob_day = None
+        self.dob_month = None
+        self.dob_year = None
 
     def get_info(self):
         session = HTMLSession()
@@ -90,7 +93,6 @@ class Ripstance:
             elif data_left == 'address':
                 self.address = value_left
             elif data_left == 'city':
-                # TODO proper fix for this
                 self.city = value_left.capitalize()
             elif data_left == 'gender':
                 self.gender = value_left
@@ -145,11 +147,12 @@ class Ripstance:
                 self.postcode = value_right
             elif data_right == 'date of birth':
                 self.dob = value_right
+                splitted_dob = value_right.split(' ')
+                self.dob_day = splitted_dob[0]
+                self.dob_month = splitted_dob[1]
+                self.dob_year = splitted_dob[2]
             elif data_right == 'passport expired':
                 self.passport_expired = value_right
-            elif data_right == 'e-mail':
-                # TODO fix [email protected]
-                self.email = value_right
             elif data_right == 'ethnicity':
                 self.ethnicity = value_right
             elif data_right == 'zodiac sign':
@@ -176,9 +179,6 @@ class Ripstance:
                 self.salary = value_right
             elif data_right == 'job title':
                 self.job_title = value_right
-            elif data_right == 'company email':
-                # TODO fix [email protected]
-                self.company_email = value_right
             elif data_right == 'license plate':
                 self.license_plate = value_right
             elif data_right == 'color':
