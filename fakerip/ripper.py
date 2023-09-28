@@ -186,13 +186,15 @@ class Ripstance:
             elif data_right == 'color':
                 self.vehicle_color = value_right
 
-    def generate_random_email(self, domain):
+    def generate_random_email(self, domain=None):
         if not self.forename or self.surname or self.dob_year:
             self.get_info()
 
         # Get the last 2 or 3 chars from birth year
         random_index = random.randint(2, 3)
-        email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-random_index:]}@{domain}'
+        email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-random_index:]}'
+        if domain:
+            email += f'@{domain}'
 
         return email
 
