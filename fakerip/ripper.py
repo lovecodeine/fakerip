@@ -10,7 +10,9 @@ class Ripstance:
 
         # Personal Details
         self.country = None
-        self.name = None
+        self.full_name = None
+        self.forename = None
+        self.surname = None
         self.address = None
         self.city = None
         self.postcode = None
@@ -134,7 +136,10 @@ class Ripstance:
 
             # Right column
             if data_right == 'name':
-                self.name = value_right
+                self.full_name = value_right
+                splitted_name = value_right.split(' ')
+                self.forename = splitted_name[0]
+                self.surname = splitted_name[1]
             elif data_right == 'postcode':
                 self.postcode = value_right
             elif data_right == 'date of birth':
