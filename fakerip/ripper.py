@@ -1,4 +1,6 @@
 # Third-Party Modules
+import random
+
 from requests_html import HTMLSession
 # Local Modules
 from fakerip import exceptions
@@ -69,7 +71,6 @@ class Ripstance:
         self.dob_day = None
         self.dob_month = None
         self.dob_year = None
-        self.email = None
 
     def get_info(self):
         session = HTMLSession()
@@ -185,7 +186,15 @@ class Ripstance:
             elif data_right == 'color':
                 self.vehicle_color = value_right
 
-        self.email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-2:]}'  # Only get the last 2 chars
+    def generate_random_email(self, domain):
+        if not self.forename or self.surname or self.dob_year:
+            self.get_info()
+
+        # Get the last 2 or 3 chars from birth year
+        random_index = random.randint(2, 3)
+        email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-random_index:]}@{domain}'
+
+        return email
 
     def __str__(self):
         attributes = [f'{attr}: {getattr(self, attr)}' for attr in vars(self)]

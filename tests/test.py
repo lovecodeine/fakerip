@@ -8,7 +8,7 @@ class TestModule(unittest.TestCase):
         ripstance = ripper.Ripstance()
         ripstance.get_info()
 
-        print(ripstance)
+        print(ripstance.generate_random_email('web.de'))
 
         self.assertEqual(ripstance, 'Expected Output')
 
