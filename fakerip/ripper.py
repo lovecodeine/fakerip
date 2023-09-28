@@ -185,6 +185,8 @@ class Ripstance:
             elif data_right == 'color':
                 self.vehicle_color = value_right
 
+        self.email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-2:]}'  # Only get the last 2 chars
+
     def __str__(self):
         attributes = [f'{attr}: {getattr(self, attr)}' for attr in vars(self)]
         return '\n'.join(attributes)
