@@ -81,8 +81,8 @@ class Ripstance:
             value = tr.find('span')
             data_left = data[0].text.lower()
             data_right = data[1].text.lower() if len(value) > 1 else None
-            value_left = value[0].text.lower()
-            value_right = value[1].text.lower() if len(value) > 1 else None
+            value_left = value[0].text
+            value_right = value[1].text if len(value) > 1 else None
 
             # Left column
             if data_left == 'country':
