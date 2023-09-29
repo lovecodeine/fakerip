@@ -1,211 +1,152 @@
-# Third-Party Modules
+# Standard Library
 import random
-
+from typing import List, Union
+# Third-Party Library
 from requests_html import HTMLSession
 # Local Modules
 from fakerip import exceptions
 
 
 class Ripstance:
-    def __init__(self, country_code='de'):
+    # Define the attributes this class will use.
+    __slots__: List[str] = [
+        'url', 'country', 'full_name', 'address', 'city', 'postcode', 'gender',
+        'dob', 'passport', 'passport_expired', 'phone', 'mothers_maiden_name',
+        'ethnicity', 'age', 'zodiac_sign', 'height', 'weight', 'hair_color',
+        'eye_color', 'bank_name', 'bank_code', 'account_number', 'iban', 'bic',
+        'cc_type', 'cc_number', 'cc_expiry', 'cc_cvv2', 'user_name', 'password',
+        'ipv4', 'ipv6', 'user_agent', 'qualification', 'institution', 'company_name',
+        'company_address', 'company_phone', 'job_title', 'salary', 'vehicle',
+        'license_plate', 'vin', 'vehicle_color', 'forename', 'surname', 'dob_day',
+        'dob_month', 'dob_year'
+    ]
+
+    def __init__(self, country_code: str = 'de') -> None:
+        # Construct the URL based on the country code.
         self.url = f'https://fakeit.receivefreesms.co.uk/c/{country_code}/'
 
-        # Personal Details
-        self.country = None
-        self.full_name = None
-        self.address = None
-        self.city = None
-        self.postcode = None
-        self.gender = None
-        self.dob = None
-        self.passport = None
-        self.passport_expired = None
-        self.phone = None
-        self.mothers_maiden_name = None
-        self.ethnicity = None
-        self.age = None
-        self.zodiac_sign = None
-        self.height = None
-        self.weight = None
-        self.hair_color = None
-        self.eye_color = None
+    def get_info(self) -> None:
+        """Fetch the content from the URL and parse the relevant data."""
+        response = self._fetch_content()
+        tr_elements = response.html.find('tr')
+        self._parse_data_from_elements(tr_elements)
 
-        # Financial Details
-        self.bank_name = None
-        self.bank_code = None
-        self.account_number = None
-        self.iban = None
-        self.bic = None
-        self.cc_type = None
-        self.cc_number = None
-        self.cc_expiry = None
-        self.cc_cvv2 = None
-
-        # Internet
-        self.user_name = None
-        self.password = None
-        self.ipv4 = None
-        self.ipv6 = None
-        self.user_agent = None
-
-        # Education
-        self.qualification = None
-        self.institution = None
-
-        # Employment Details
-        self.company_name = None
-        self.company_address = None
-        self.company_phone = None
-        self.job_title = None
-        self.salary = None
-
-        # Vehicle Details
-        self.vehicle = None
-        self.license_plate = None
-        self.vin = None
-        self.vehicle_color = None
-
-        # Custom
-        self.forename = None
-        self.surname = None
-        self.dob_day = None
-        self.dob_month = None
-        self.dob_year = None
-
-    def get_info(self):
+    def _fetch_content(self):
+        """Make a GET request to the given URL and return the response."""
         session = HTMLSession()
-        response = session.get(self.url)
+        # session.headers.update({'User-Agent': 'Mozilla/5.0'})
 
+        response = session.get(self.url)
         if response.status_code != 200:
             raise exceptions.RequestDeclined(f'Response status code: {response.status_code}')
+        return response
 
-        tr_elements = response.html.find('tr')
-
-        for tr in tr_elements:
+    def _parse_data_from_elements(self, elements) -> None:
+        """Parse and extract the data from the provided elements."""
+        for tr in elements:
             data = tr.find('th')
             value = tr.find('span')
-            data_left = data[0].text.lower()
-            data_right = data[1].text.lower() if len(data) > 1 else None
-            value_left = value[0].text
-            value_right = value[1].text if len(value) > 1 else None
+            self._extract_data(data[0].text.lower(), value[0].text)
+            if len(data) > 1 and len(value) > 1:
+                self._extract_data(data[1].text.lower(), value[1].text)
 
-            # Left column
-            if data_left == 'country':
-                self.country = value_left
-            elif data_left == 'address':
-                self.address = value_left
-            elif data_left == 'city':
-                self.city = value_left.capitalize()
-            elif data_left == 'gender':
-                self.gender = value_left
-            elif data_left == 'passport':
-                self.passport = value_left
-            elif data_left == 'phone':
-                self.phone = value_left
-            elif data_left == 'mother\'s maiden name':
-                self.mothers_maiden_name = value_left
-            elif data_left == 'age (years)':
-                self.age = value_left
-            elif data_left == 'height':
-                self.height = value_left
-            elif data_left == 'hair color':
-                self.hair_color = value_left
-            elif data_left == 'bank name':
-                self.bank_name = value_left
-            elif data_left == 'bic':
-                self.bic = value_left
-            elif data_left == 'iban':
-                self.iban = value_left
-            elif data_left == 'credit card type':
-                self.cc_type = value_left
-            elif data_left == 'credit card expiry':
-                self.cc_expiry = value_left
-            elif data_left == 'user name':
-                self.user_name = value_left
-            elif data_left == 'ipv4 address':
-                self.ipv4 = value_left
-            elif data_left == 'user agent':
-                self.user_agent = value_left
-            elif data_left == 'qualification':
-                self.qualification = value_left
-            elif data_left == 'company name':
-                self.company_name = value_left
-            elif data_left == 'company address':
-                self.company_address = value_left
-            elif data_left == 'company phone':
-                self.company_phone = value_left
-            elif data_left == 'vehicle':
-                self.vehicle = value_left
-            elif data_left == 'vin':
-                self.vin = value_left
-
-            # Right column
-            if data_right == 'name':
-                self.full_name = value_right
-                splitted_name = value_right.split(' ')
-                self.forename = splitted_name[0]
-                self.surname = splitted_name[1]
-            elif data_right == 'postcode':
-                self.postcode = value_right
-            elif data_right == 'date of birth':
-                self.dob = value_right
-                splitted_dob = value_right.split(' ')
-                self.dob_day = splitted_dob[0]
-                self.dob_month = splitted_dob[1]
-                self.dob_year = splitted_dob[2]
-            elif data_right == 'passport expired':
-                self.passport_expired = value_right
-            elif data_right == 'ethnicity':
-                self.ethnicity = value_right
-            elif data_right == 'zodiac sign':
-                self.zodiac_sign = value_right
-            elif data_right == 'weight':
-                self.weight = value_right
-            elif data_right == 'eye color':
-                self.eye_color = value_right
-            elif data_right == 'bank code':
-                self.bank_code = value_right
-            elif data_right == 'account number':
-                self.account_number = value_right
-            elif data_right == 'credit card number':
-                self.cc_number = value_right
-            elif data_right == 'credit card cvv2':
-                self.cc_cvv2 = value_right
-            elif data_right == 'password':
-                self.password = value_right
-            elif data_right == 'ipv6 address':
-                self.ipv6 = value_right
-            elif data_right == 'institution':
-                self.institution = value_right
-            elif data_right == 'salary':
-                self.salary = value_right
-            elif data_right == 'job title':
-                self.job_title = value_right
-            elif data_right == 'license plate':
-                self.license_plate = value_right
-            elif data_right == 'color':
-                self.vehicle_color = value_right
-
-    def generate_random_email(self, domain=None):
-        if not self.forename or self.surname or self.dob_year:
-            self.get_info()
-
-        disallowed_chars_dict = {
-            'ä': 'ae',
-            'ö': 'oe',
-            'ü': 'ue'
+    def _extract_data(self, key: str, value: str) -> None:
+        """
+        Mapping from the scraped keys to the internal attribute names.
+        If a value is callable (a function/method), it will be called with 'value' as an argument.
+        Otherwise, the attribute with the corresponding name is set to 'value'.
+        """
+        mapping = {
+            'country': 'country',
+            'address': 'address',
+            'city': 'city',
+            'gender': 'gender',
+            'passport': 'passport',
+            'phone': 'phone',
+            'mother\'s maiden name': 'mothers_maiden_name',
+            'age (years)': 'age',
+            'height': 'height',
+            'hair color': 'hair_color',
+            'bank name': 'bank_name',
+            'bic': 'bic',
+            'iban': 'iban',
+            'credit card type': 'cc_type',
+            'credit card expiry': 'cc_expiry',
+            'user name': 'user_name',
+            'ipv4 address': 'ipv4',
+            'user agent': 'user_agent',
+            'qualification': 'qualification',
+            'company name': 'company_name',
+            'company address': 'company_address',
+            'company phone': 'company_phone',
+            'vehicle': 'vehicle',
+            'vin': 'vin',
+            'postcode': 'postcode',
+            'passport expired': 'passport_expired',
+            'ethnicity': 'ethnicity',
+            'zodiac sign': 'zodiac_sign',
+            'weight': 'weight',
+            'eye color': 'eye_color',
+            'bank code': 'bank_code',
+            'account number': 'account_number',
+            'credit card number': 'cc_number',
+            'credit card cvv2': 'cc_cvv2',
+            'password': 'password',
+            'ipv6 address': 'ipv6',
+            'institution': 'institution',
+            'salary': 'salary',
+            'job title': 'job_title',
+            'license plate': 'license_plate',
+            'color': 'vehicle_color',
+            'name': self._split_full_name,
+            'date of birth': self._split_dob,
         }
 
-        # Get the last 2 or 3 chars from birth year
-        random_index = random.randint(2, 3)
-        email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-random_index:]}'
-        if domain:
-            email += f'@{domain}'
-        for key, value in disallowed_chars_dict.items():
-            email = email.replace(key, value)
+        if key in mapping:
+            target = mapping[key]
+            if callable(target):  # if the target is a method, call it
+                target(value)
+            else:
+                setattr(self, target, value)
 
+    def _split_full_name(self, full_name: str) -> None:
+        """Split the full name into forename and surname."""
+        self.full_name = full_name
+        splitted_name = full_name.split(' ')
+        self.forename = splitted_name[0]
+        self.surname = splitted_name[1] if len(splitted_name) > 1 else None  # safe check in case there's no surname
+
+    def _split_dob(self, dob: str) -> None:
+        """Split the date of birth into day, month, and year."""
+        self.dob = dob
+        splitted_dob = dob.split(' ')
+        self.dob_day = splitted_dob[0]
+        self.dob_month = splitted_dob[1]
+        self.dob_year = splitted_dob[2] if len(splitted_dob) > 2 else None  # safe check in case the format changes
+
+    def generate_random_email(self, domain: Union[str, None] = None) -> str:
+        """
+        Generate a random email based on the forename, surname, and a random selection from dob_year.
+        The email is also sanitized to replace certain characters.
+        """
+        if not (self.forename and self.surname and self.dob_year):
+            self.get_info()
+
+        # Random choice for the dob_year index
+        index = random.choice([-2, -3])
+        base_email = f"{self.forename.lower()}_{self.surname.lower()}{self.dob_year[index:]}"
+        sanitized_email = self._sanitize_email(base_email)
+
+        return f"{sanitized_email}@{domain}" if domain else sanitized_email
+
+    @staticmethod
+    def _sanitize_email(email: str) -> str:
+        """Replace certain characters in the email to make it valid."""
+        replacements = {'ä': 'ae', 'ö': 'oe', 'ü': 'ue'}
+        for key, value in replacements.items():
+            email = email.replace(key, value)
         return email
 
-    def __str__(self):
-        attributes = [f'{attr}: {getattr(self, attr)}' for attr in vars(self)]
-        return '\n'.join(attributes)
+    def __str__(self) -> str:
+        """Define the string representation of the object, listing all attributes and their values"""
+        return '\n'.join([f'{attr}: {getattr(self, attr)}' for attr in self.__slots__])
