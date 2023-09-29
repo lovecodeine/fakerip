@@ -190,11 +190,19 @@ class Ripstance:
         if not self.forename or self.surname or self.dob_year:
             self.get_info()
 
+        disallowed_chars_dict = {
+            'ä': 'ae',
+            'ö': 'oe',
+            'ü': 'ue'
+        }
+
         # Get the last 2 or 3 chars from birth year
         random_index = random.randint(2, 3)
         email = f'{self.forename.lower()}_{self.surname.lower()}{self.dob_year[-random_index:]}'
         if domain:
             email += f'@{domain}'
+        for key, value in disallowed_chars_dict.items():
+            email = email.replace(key, value)
 
         return email
 
