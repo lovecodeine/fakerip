@@ -5,6 +5,7 @@ fakeit can suck my balls. who tf would pay for their api?
 
 ## Features
 
+- small package
 - quick web request to fakeit's website
 - information gathering
 - own email generation, based on received data
