@@ -14,7 +14,16 @@ who tf pays for their api?
 
 
 ## Usage
+Download latest release and install it using pip:
+```py
+    # Update the path to the correct path on your os
+    # Using the source archieve
+    pip install C:\Users\xxx\Downloads\fakerip\fakerip-2.0.tar.gz
+    # Or using the wheel file
+    pip install C:\Users\xxx\Downloads\fakerip\fakerip-2.0-py3-none-any.whl
+```
 
+In your code:
 ```py
     from fakerip import ripper
 
