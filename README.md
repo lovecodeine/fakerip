@@ -1,6 +1,6 @@
 # fakerip
 
-fakeit can suck my balls. who tf would pay for their api?
+who tf pays for their api?
 
 
 ## Features
