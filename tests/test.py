@@ -2,7 +2,6 @@ import unittest
 from fakerip import ripper
 
 
-# testen ist für lutscher, hdf
 class TestModule(unittest.TestCase):
     def test_instance(self):
         ripstance = ripper.Ripstance()
