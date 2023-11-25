@@ -35,6 +35,6 @@ In your code:
     # Examples:
     print(ripstance.forename)
     print(ripstance.user_agent)
-    print(ripstance.generate_random_email())
+    print(ripstance.generate_random_email('gmail.com'))
 ```
     
